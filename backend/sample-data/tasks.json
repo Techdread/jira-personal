@@ -1,0 +1,34 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "projectId": "1",
+      "title": "Design Homepage",
+      "description": "Create modern homepage layout with responsive design",
+      "status": "In Progress",
+      "priority": "High",
+      "createdAt": "2024-12-16T10:57:35Z",
+      "updatedAt": "2024-12-16T10:57:35Z"
+    },
+    {
+      "id": "2",
+      "projectId": "1",
+      "title": "Setup Portfolio Section",
+      "description": "Add portfolio section with project showcases",
+      "status": "To Do",
+      "priority": "Medium",
+      "createdAt": "2024-12-16T10:57:35Z",
+      "updatedAt": "2024-12-16T10:57:35Z"
+    },
+    {
+      "id": "3",
+      "projectId": "2",
+      "title": "User Authentication",
+      "description": "Implement user login and registration",
+      "status": "To Do",
+      "priority": "High",
+      "createdAt": "2024-12-16T10:57:35Z",
+      "updatedAt": "2024-12-16T10:57:35Z"
+    }
+  ]
+}

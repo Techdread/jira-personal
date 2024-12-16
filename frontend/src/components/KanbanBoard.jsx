@@ -63,25 +63,43 @@ const TaskCard = ({ task, provided, onEdit, onDelete }) => (
   </Card>
 );
 
-export default function KanbanBoard() {
+export default function KanbanBoard({ projectId, searchTerm }) {
   const [tasks, setTasks] = useState([]);
   const [editTask, setEditTask] = useState(null);
   const { showSnackbar } = useSnackbar();
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tasks');
+      const url = new URL('http://localhost:5000/api/tasks');
+      
+      // Only fetch tasks if we have a project
+      if (!projectId) {
+        setTasks([]);
+        return;
+      }
+
+      console.log('Fetching tasks for project:', projectId);
+      url.searchParams.append('projectId', projectId.toString());
+      
+      if (searchTerm) {
+        url.searchParams.append('search', searchTerm);
+      }
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
+      console.log('Fetched tasks:', data);
       setTasks(data);
     } catch (error) {
+      console.error('Error fetching tasks:', error);
       showSnackbar('Error fetching tasks', 'error');
     }
   };
 
   useEffect(() => {
+    console.log('Project ID or search term changed:', { projectId, searchTerm });
     fetchTasks();
-  }, []);
+  }, [projectId, searchTerm]);
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
@@ -179,6 +197,7 @@ export default function KanbanBoard() {
           onClose={() => setEditTask(null)}
           task={editTask}
           onSubmit={fetchTasks}
+          projectId={projectId}
         />
       )}
     </>

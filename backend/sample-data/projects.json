@@ -1,0 +1,20 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "name": "Personal Website",
+      "description": "Portfolio website redesign project",
+      "color": "#2196f3",
+      "createdAt": "2024-12-16T10:57:35Z",
+      "updatedAt": "2024-12-16T10:57:35Z"
+    },
+    {
+      "id": "2",
+      "name": "Mobile App",
+      "description": "React Native fitness tracking app",
+      "color": "#4caf50",
+      "createdAt": "2024-12-16T10:57:35Z",
+      "updatedAt": "2024-12-16T10:57:35Z"
+    }
+  ]
+}
