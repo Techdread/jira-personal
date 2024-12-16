@@ -141,6 +141,11 @@ export default function KanbanBoard({ projectId, searchTerm }) {
     }
   };
 
+  const handleTaskUpdated = (updatedTask) => {
+    console.log('Task updated:', updatedTask);
+    fetchTasks(); // Refresh the board
+  };
+
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -196,8 +201,8 @@ export default function KanbanBoard({ projectId, searchTerm }) {
           open={Boolean(editTask)}
           onClose={() => setEditTask(null)}
           task={editTask}
-          onSubmit={fetchTasks}
           projectId={projectId}
+          onTaskAdded={handleTaskUpdated}
         />
       )}
     </>

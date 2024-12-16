@@ -62,15 +62,19 @@ export default function TaskForm({ open, onClose, task, projectId, onTaskAdded }
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to save task');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save task');
+      }
 
       const savedTask = await response.json();
-      showSnackbar('Task saved successfully');
+      console.log('Task saved:', savedTask);
+      showSnackbar(`Task ${task ? 'updated' : 'created'} successfully`);
       onTaskAdded?.(savedTask);
       handleClose();
     } catch (error) {
       console.error('Error saving task:', error);
-      showSnackbar('Error saving task', 'error');
+      showSnackbar(error.message || 'Error saving task', 'error');
     }
   };
 
