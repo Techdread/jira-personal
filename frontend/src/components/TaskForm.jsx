@@ -17,7 +17,7 @@ import { useSnackbar } from '../contexts/SnackbarContext';
 const PRIORITIES = ['Low', 'Medium', 'High'];
 const STATUSES = ['To Do', 'In Progress', 'Testing', 'Done'];
 
-export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
+export default function TaskForm({ open, onClose, task, projectId, onTaskAdded }) {
   const { showSnackbar } = useSnackbar();
   const [formData, setFormData] = useState(
     task || {
@@ -59,17 +59,17 @@ export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
         body: JSON.stringify({
           ...formData,
           projectId: projectId || task?.projectId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         }),
       });
 
       if (!response.ok) throw new Error('Failed to save task');
 
+      const savedTask = await response.json();
       showSnackbar('Task saved successfully');
-      onSubmit?.(); // Call onSubmit to refresh the tasks
-      handleClose(); // Close the dialog after successful save
+      onTaskAdded?.(savedTask);
+      handleClose();
     } catch (error) {
+      console.error('Error saving task:', error);
       showSnackbar('Error saving task', 'error');
     }
   };
@@ -92,8 +92,6 @@ export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
       maxWidth="sm"
       fullWidth
       aria-labelledby="task-dialog-title"
-      disableEnforceFocus
-      disableRestoreFocus
     >
       <Box component="form" onSubmit={handleSubmit} noValidate>
         <DialogTitle id="task-dialog-title">
@@ -109,9 +107,6 @@ export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
             value={formData.title}
             onChange={handleChange}
             required
-            InputProps={{
-              id: 'task-title-input',
-            }}
           />
           <TextField
             margin="dense"
@@ -119,33 +114,13 @@ export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
             label="Description"
             fullWidth
             multiline
-            rows={4}
+            rows={3}
             value={formData.description}
             onChange={handleChange}
-            InputProps={{
-              id: 'task-description-input',
-            }}
           />
           <FormControl fullWidth margin="dense">
-            <InputLabel id="priority-label">Priority</InputLabel>
+            <InputLabel>Status</InputLabel>
             <Select
-              labelId="priority-label"
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              label="Priority"
-            >
-              {PRIORITIES.map((priority) => (
-                <MenuItem key={priority} value={priority}>
-                  {priority}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense">
-            <InputLabel id="status-label">Status</InputLabel>
-            <Select
-              labelId="status-label"
               name="status"
               value={formData.status}
               onChange={handleChange}
@@ -158,13 +133,26 @@ export default function TaskForm({ open, onClose, task, onSubmit, projectId }) {
               ))}
             </Select>
           </FormControl>
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Priority</InputLabel>
+            <Select
+              name="priority"
+              value={formData.priority}
+              onChange={handleChange}
+              label="Priority"
+            >
+              {PRIORITIES.map((priority) => (
+                <MenuItem key={priority} value={priority}>
+                  {priority}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} type="button">
-            Cancel
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
           <Button type="submit" variant="contained">
-            {task ? 'Save' : 'Create'}
+            Save
           </Button>
         </DialogActions>
       </Box>

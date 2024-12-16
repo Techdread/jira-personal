@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Container, Box } from '@mui/material'
@@ -10,6 +10,7 @@ import { SnackbarProvider } from './contexts/SnackbarContext'
 function App() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleSearch = (term, projectId) => {
     console.log('Search:', term, 'Project ID:', projectId);
@@ -22,6 +23,11 @@ function App() {
     setSearchTerm(''); // Clear search when changing projects
   };
 
+  const handleTaskAdded = useCallback(() => {
+    // Force a refresh of the KanbanBoard
+    setRefreshKey(prev => prev + 1);
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -31,9 +37,11 @@ function App() {
             onSearch={handleSearch} 
             onProjectChange={handleProjectChange}
             selectedProject={selectedProject}
+            onTaskAdded={handleTaskAdded}
           />
           <Container maxWidth="xl" sx={{ py: 4 }}>
             <KanbanBoard 
+              key={refreshKey}
               projectId={selectedProject?.id}
               searchTerm={searchTerm}
             />

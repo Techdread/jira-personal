@@ -15,7 +15,7 @@ import AddIcon from '@mui/icons-material/Add';
 import TaskForm from './TaskForm';
 import ProjectSelector from './ProjectSelector';
 
-export default function Header({ onSearch, onProjectChange, selectedProject: propSelectedProject }) {
+export default function Header({ onSearch, onProjectChange, selectedProject: propSelectedProject, onTaskAdded }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [openTaskForm, setOpenTaskForm] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -119,6 +119,7 @@ export default function Header({ onSearch, onProjectChange, selectedProject: pro
           open={openTaskForm}
           onClose={() => setOpenTaskForm(false)}
           projectId={selectedProject?.id}
+          onTaskAdded={onTaskAdded}
         />
       )}
     </>
